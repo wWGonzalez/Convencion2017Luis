@@ -1,0 +1,108 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema convencion
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema convencion
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `convencion` DEFAULT CHARACTER SET utf8 ;
+USE `convencion` ;
+
+-- -----------------------------------------------------
+-- Table `convencion`.`bus`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `convencion`.`bus` (
+  `idBus` INT(11) NOT NULL AUTO_INCREMENT,
+  `Bus` VARCHAR(45) NULL DEFAULT 'Bus',
+  PRIMARY KEY (`idBus`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `convencion`.`ciclo`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `convencion`.`ciclo` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `ciclo` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `convencion`.`estudiante`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `convencion`.`estudiante` (
+  `idEstudiante` INT(11) NOT NULL AUTO_INCREMENT,
+  `carne` VARCHAR(45) NULL DEFAULT NULL,
+  `nombre` VARCHAR(50) NULL DEFAULT NULL,
+  `apellido` VARCHAR(50) NULL DEFAULT NULL,
+  `telefono` VARCHAR(9) NULL DEFAULT NULL,
+  `fecha` DATE NULL DEFAULT NULL,
+  `asistencia` bool null,
+  `Ciclo_id` INT(11) NOT NULL,
+  PRIMARY KEY (`idEstudiante`),
+  INDEX `fk_Estudiante_Ciclo1_idx` (`Ciclo_id` ASC),
+  CONSTRAINT `fk_Estudiante_Ciclo1`
+    FOREIGN KEY (`Ciclo_id`)
+    REFERENCES `convencion`.`ciclo` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `convencion`.`asientos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `convencion`.`asientos` (
+  `idAsiento` INT(11) NOT NULL AUTO_INCREMENT,
+  `Bus_idBus` INT(11) NOT NULL,
+  `Estudiante_idEstudiante` INT(11) NOT NULL,
+  PRIMARY KEY (`idAsiento`),
+  INDEX `fk_Asientos_Bus1_idx` (`Bus_idBus` ASC),
+  INDEX `fk_Asientos_Estudiante1_idx` (`Estudiante_idEstudiante` ASC),
+  CONSTRAINT `fk_Asientos_Bus1`
+    FOREIGN KEY (`Bus_idBus`)
+    REFERENCES `convencion`.`bus` (`idBus`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Asientos_Estudiante1`
+    FOREIGN KEY (`Estudiante_idEstudiante`)
+    REFERENCES `convencion`.`estudiante` (`idEstudiante`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `convencion`.`asistencia`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `convencion`.`asistencia` (
+  `idAsistencia` INT(11) NOT NULL AUTO_INCREMENT,
+  `Estudiante_idEstudiante` INT(11) NOT NULL,
+  PRIMARY KEY (`idAsistencia`),
+  INDEX `fk_Asistencia_Estudiante1_idx` (`Estudiante_idEstudiante` ASC),
+  CONSTRAINT `fk_Asistencia_Estudiante1`
+    FOREIGN KEY (`Estudiante_idEstudiante`)
+    REFERENCES `convencion`.`estudiante` (`idEstudiante`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
