@@ -14,7 +14,9 @@ public class ConnectionDB {
     public static java.sql.Connection Conectar(){
         try{
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            conn = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/convencion?"+"user=root&password=djroca");
+            //conn = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/convencion?"+"useSSL=false"+"user=root&password=01234");
+            conn = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/"+"convencion?" + "useSSL=true&autoReconnect=true", "root", "01234");
+        
         }catch(Exception e){
             javax.swing.JOptionPane.showMessageDialog(null, "Error en la conexion:\t" + e.getMessage());
         }

@@ -14,6 +14,7 @@ public class MainFile {
         Functions.theme();
         //Listado l = new Listado();
         RegistroEstudiante re = new RegistroEstudiante();
+        //re.setVisible(true);
         //NewJFrame f = new NewJFrame("cat");
     }
 }

@@ -33,8 +33,9 @@ public class RegistroEstudiante extends javax.swing.JFrame {
     public RegistroEstudiante() {
         initComponents();
         setLocationRelativeTo(null);
-        datoCiclo();
-        datoBus();
+         datoCiclo();
+        //setComboboxCiclo();
+         datoBus();
         setVisible(true);
     }
 
@@ -366,6 +367,28 @@ public class RegistroEstudiante extends javax.swing.JFrame {
         Listado l = new Listado("all");
     }//GEN-LAST:event_jButton2ActionPerformed
 
+       public void setComboboxCiclo(){
+          try{
+            this.sql="select * from ciclo";
+            statement = ShareConnection.connection.getConn().prepareStatement(sql);
+            result = statement.executeQuery();
+            
+            while(result.next()){
+                String ciclo = result.getString("ciclo");
+                this.ciclo.addItem(ciclo);
+            }
+            statement.close();
+            result.close();
+        }catch(Exception e){
+            
+        }
+          
+          
+            
+    }//finaliza seComboBox
+    
+    
+    
     public void datoCiclo(){
         ciclo.removeAllItems();
         sql = "select ciclo from convencion.ciclo";

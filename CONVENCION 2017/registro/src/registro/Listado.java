@@ -25,6 +25,8 @@ public class Listado extends javax.swing.JFrame {
     java.sql.PreparedStatement statement = null;
     java.sql.ResultSet result = null;
     String sql = null;
+    
+    String idEstudiante="";
     /**
      * Creates new form NewJFrame
      */
@@ -49,6 +51,7 @@ public class Listado extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         datos = new javax.swing.JTable();
         jTextField1 = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -63,6 +66,11 @@ public class Listado extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        datos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                datosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(datos);
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
@@ -76,6 +84,8 @@ public class Listado extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("Buscar");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -86,6 +96,8 @@ public class Listado extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 880, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addGap(29, 29, 29)
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -93,7 +105,9 @@ public class Listado extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(47, Short.MAX_VALUE)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
                 .addGap(38, 38, 38)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 499, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -107,12 +121,74 @@ public class Listado extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
-    mostrar("");  
+    mostrar(this.jTextField1.getText());
     }//GEN-LAST:event_jTextField1KeyPressed
 
+    private void datosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_datosMouseClicked
+        // TODO add your handling code here:
+        this.setIdEstudiante();
+        Update();
+    }//GEN-LAST:event_datosMouseClicked
+
+    
+    
+    //Guarda los datos en variables globales
+    public void setIdEstudiante(){
+       try{
+            int row=this.datos.getSelectedRow();
+            String Table_click=(this.datos.getModel().getValueAt(row,  0).toString());
+            String sql="select * from convencion.estudiante where carne='"+Table_click+"' ";
+            statement = ShareConnection.connection.getConn().prepareStatement(sql);
+             result = statement.executeQuery();    
+             if(result.next()){
+                 this.idEstudiante=result.getString("idEstudiante");
+                  this.jTextField1.setText(idEstudiante);
+                   JOptionPane.showMessageDialog(rootPane, "Asistencia Registrada exitosamente");
+              
+                 
+                 
+                 
+                // this.txtTelefono.setText(idEstudiante);
+                // this.txtCarne.setText(carne);
+                
+            //  bus.setVisible(true);
+             // bus.txtID.setText(add1);
+                
+                //this.setVisible(false);
+                 
+             }
+            // statement.close();
+        }catch (SQLException ex) {
+                Logger.getLogger(RegistroEstudiante.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Error al ingresar los datos: " + ex.getMessage());
+            
+        }
+       
+              
+    }
+    
+    void Update(){
+        sql = "UPDATE convencion.estudiante SET asistencia=? WHERE idEstudiante=?;";
+            try {
+                statement = ShareConnection.connection.getConn().prepareStatement(sql);
+                statement.setString(1, "1");
+                statement.setString(2, this.idEstudiante);
+                
+                //result = statement.executeQuery(sql);
+                statement.execute();
+                statement.close();
+                result.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RegistroEstudiante.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Error al ingresar los datos: " + ex.getMessage());
+            }
+    }
+    
+    
+    
     void mostrar(String valor){
    
-           sql = "select carne as Carnet, nombre as Nombre, apellido as Apellido, bus as Bus, idAsiento as 'No. Inscripcion' from convencion.estudiante inner join convencion.asientos on estudiante.idEstudiante = asientos.Estudiante_idEstudiante inner join convencion.bus on bus.idBus = asientos.Bus_idBus LIKE '%"+jTextField1.getText()+"%'";
+           sql = "select carne as Carnet, nombre as Nombre, apellido as Apellido, bus as Bus, idAsiento as 'No. Inscripcion' from convencion.estudiante inner join convencion.asientos on estudiante.idEstudiante = asientos.Estudiante_idEstudiante inner join convencion.bus on bus.idBus = asientos.Bus_idBus where nombre LIKE '%"+jTextField1.getText()+"%'";
             try {
                 statement = ShareConnection.connection.getConn().prepareStatement(sql);
                 result = statement.executeQuery();
@@ -156,6 +232,7 @@ public class Listado extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable datos;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
