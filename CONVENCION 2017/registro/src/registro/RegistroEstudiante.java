@@ -92,6 +92,12 @@ public class RegistroEstudiante extends javax.swing.JFrame {
 
         jLabel5.setText("Telefono:");
 
+        TelefonoText.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                TelefonoTextKeyTyped(evt);
+            }
+        });
+
         AddEstudiante.setText("Guardar");
         AddEstudiante.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -366,6 +372,17 @@ public class RegistroEstudiante extends javax.swing.JFrame {
         // TODO add your handling code here:
         Listado l = new Listado("all");
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void TelefonoTextKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TelefonoTextKeyTyped
+        // TODO add your handling code here:
+        
+          
+        if(this.TelefonoText.getText().length()>7){
+            evt.consume();
+         JOptionPane.showMessageDialog(rootPane, "Rectifique Numero de Telefono");
+
+        }
+    }//GEN-LAST:event_TelefonoTextKeyTyped
 
        public void setComboboxCiclo(){
           try{
